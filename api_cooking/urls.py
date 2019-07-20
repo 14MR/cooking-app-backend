@@ -14,10 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf.urls import url
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.schemas import get_schema_view
 
+from api_cooking import settings
 from api_cooking.admin import admin_site
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -43,5 +45,4 @@ urlpatterns = [
     path('admin/', admin_site.urls),
     url("v1/users/", include("users.urls")),
     url("v1/recipes/", include("recipes.urls")),
-
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
