@@ -1,0 +1,5 @@
+[run]
+include = cooking_app_backend/*
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin
