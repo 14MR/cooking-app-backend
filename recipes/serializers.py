@@ -6,7 +6,7 @@ from drf_yasg.utils import swagger_serializer_method
 
 
 class RecipeImageBlockSerializer(serializers.ModelSerializer):
-    image_url = serializers.CharField(source='image')
+    image_url = serializers.CharField(source='image.url')
 
     class Meta:
         model = RecipeImageBlock
