@@ -2,7 +2,7 @@ dist: xenial
 services:
   - postgresql
 before_script:
-  - psql -c 'create database {{cookiecutter.project_slug}};' -U postgres
+  - psql -c 'create database cooking_app_backend;' -U postgres
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq build-essential gettext python-dev zlib1g-dev libpq-dev xvfb
