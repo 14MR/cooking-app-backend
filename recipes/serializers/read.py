@@ -1,8 +1,7 @@
+from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 
-from api_cooking import settings
 from recipes.models import Recipe, RecipeStep, RecipeImageBlock, RecipeTextBlock, RecipeTimerBlock
-from drf_yasg.utils import swagger_serializer_method
 
 
 class RecipeImageBlockSerializer(serializers.ModelSerializer):
@@ -16,7 +15,7 @@ class RecipeImageBlockSerializer(serializers.ModelSerializer):
 class RecipeTextBlockSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeTextBlock
-        fields = ( "type", "text")
+        fields = ("type", "text")
 
 
 class RecipeTimerBlockSerializer(serializers.ModelSerializer):
