@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from recipes.models import Recipe, RecipeStep, RecipeImageBlock, RecipeTextBlock, RecipeTimerBlock
+from drf_yasg.utils import swagger_serializer_method
 
 
 class RecipeImageBlockSerializer(serializers.ModelSerializer):
@@ -37,6 +38,7 @@ class RecipeStepSerializer(serializers.ModelSerializer):
         model = RecipeStep
         fields = ("id", "blocks", "name")
 
+    @swagger_serializer_method(serializer_or_field=RecipeTimerBlockSerializer)
     def get_blocks(self, obj):
         blocks = map(lambda x: serializers_map[type(x)](x).data, obj.blocks.all())
         return blocks
