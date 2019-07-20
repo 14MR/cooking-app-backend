@@ -106,6 +106,9 @@ services:
 
 
 volumes:
+  db:
+  redis_data:
+  rabbitmq_data:
   minio_data:
   minio_config:
 
