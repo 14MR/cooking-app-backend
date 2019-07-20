@@ -1,0 +1,100 @@
+version: '3.3'
+
+services:
+  web:
+    build:
+      context: ./docker/nginx-dev/
+    ports:
+      - 80:80
+    restart: always
+    volumes:
+      - ./files:/app/files
+    depends_on:
+      - python
+    networks:
+      - project
+
+  db:
+    image: postgres:11-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "cooking_app"
+      POSTGRES_USER: "cooking_app"
+      POSTGRES_PASSWORD: "cooking_app"
+    restart: always
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - project
+    healthcheck:
+      test: ["CMD-SHELL", "su postgres pg_isready"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 3
+
+  python: &python
+    image: cooking_app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    restart: always
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    volumes:
+      - ./:/app
+    environment: &env
+      DEBUG: 'True'
+    env_file:
+      - dev.env
+    networks:
+      - project
+
+  celery:
+    <<: *python
+    ports: []
+    depends_on:
+      - redis
+      - rabbitmq
+    command: bash -c "pip3 install -r requirements.txt && celery -A backend worker --beat --loglevel=info"
+
+  redis:
+    image: redis:5.0-alpine
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    networks:
+      - project
+
+  rabbitmq:
+    image: "rabbitmq:3.7.14-alpine"
+    environment:
+      RABBITMQ_DEFAULT_USER: "cooking_app"
+      RABBITMQ_DEFAULT_PASS: "cooking_app"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - project
+
+  flower:
+    <<: *python
+    command: bash -c "pip install flower && celery flower -A backend"
+    ports: ["5555:5555"]
+    depends_on:
+      - redis
+      - rabbitmq
+    networks:
+      - project
+
+
+volumes:
+  db:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  project:

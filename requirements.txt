@@ -1,0 +1,10 @@
+Django==2.1.4
+django-choices==1.6.2
+django-filter==2.0.0
+djangorestframework==3.9.0
+psycopg2-binary==2.8.3
+pytz
+requests==2.21.0
+urllib3==1.24.2
+uWSGI==2.0.17.1
+Pillow
