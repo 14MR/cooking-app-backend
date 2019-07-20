@@ -82,7 +82,7 @@ DATABASES = {
         "NAME": os.environ.get("DB_NAME", "cooking_app"),
         "USER": os.environ.get("DB_USER", "cooking_app"),
         "PASSWORD": os.environ.get("DB_PASS", "cooking_app"),
-        "HOST": os.environ.get("DB_HOST", "db"),
+        "HOST": os.environ.get("DATABASE_URL", "db"),
         "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
