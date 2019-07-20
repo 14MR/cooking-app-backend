@@ -5,6 +5,7 @@ from django.db.models import Sum
 
 from users.models import User
 from django.utils.translation import gettext as _
+from polymorphic.models import PolymorphicModel
 
 
 class Recipe(models.Model):
@@ -16,14 +17,15 @@ class Recipe(models.Model):
 
 
 class RecipeStep(models.Model):
+    name = models.CharField(max_length=255)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='steps')
     time = models.IntegerField(default=None, null=True)
     order = models.PositiveSmallIntegerField(default=0)
 
 
-class RecipeBlock(models.Model):
+class RecipeBlock(PolymorphicModel):
     type = models.CharField(max_length=100, choices=RecipeBlockType)
-    step = models.OneToOneField(RecipeStep, on_delete=models.CASCADE, related_name='block')
+    step = models.ForeignKey(RecipeStep, on_delete=models.CASCADE, related_name='blocks')
 
 
 class RecipeTextBlock(RecipeBlock):

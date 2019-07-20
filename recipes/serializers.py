@@ -1,23 +1,53 @@
 from rest_framework import serializers
 
-from recipes.models import Recipe, RecipeStep
+from recipes.models import Recipe, RecipeStep, RecipeImageBlock, RecipeTextBlock, RecipeTimerBlock
+
+
+class RecipeImageBlockSerializer(serializers.ModelSerializer):
+    image_url = serializers.ImageField(source='image')
+
+    class Meta:
+        model = RecipeImageBlock
+        fields = ("id", "type", "image_url")
+
+
+class RecipeTextBlockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeTextBlock
+        fields = ("id", "type", "text")
+
+
+class RecipeTimerBlockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeTimerBlock
+        fields = ("id", "type", "time")
+
+
+serializers_map = {
+    RecipeImageBlock: RecipeImageBlockSerializer,
+    RecipeTextBlock: RecipeTextBlockSerializer,
+    RecipeTimerBlock: RecipeTimerBlockSerializer
+}
 
 
 class RecipeStepSerializer(serializers.ModelSerializer):
+    blocks = serializers.SerializerMethodField()
+
     class Meta:
         model = RecipeStep
-        fields = ("id", "name", "total_time", "author")
+        fields = ("id", "blocks", "name")
+
+    def get_blocks(self, obj):
+        blocks = map(lambda x: serializers_map[type(x)](x).data, obj.blocks.all())
+        return blocks
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    steps = serializers.SerializerMethodField()
+    steps = RecipeStepSerializer(many=True)
+
     class Meta:
         model = Recipe
         fields = ("id", "name", "total_time", "author", "steps")
-
-    def get_steps(self):
-        return []
-
 
 
 class RecipeListSerializer(serializers.ModelSerializer):
