@@ -10,6 +10,7 @@ from polymorphic.models import PolymorphicModel
 
 class Recipe(models.Model):
     name = models.CharField(max_length=255)
+    description = models.TextField(max_length=300, null=True, default=None)
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, default=None, blank=True)
 
     def total_time(self):
