@@ -35,6 +35,7 @@ DJANGO_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'drf_yasg'
 )
 
 LOCAL_APPS = ("recipes.apps.RecipesConfig", "users.apps.UsersConfig")

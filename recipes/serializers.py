@@ -10,9 +10,14 @@ class RecipeStepSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
+    steps = serializers.SerializerMethodField()
     class Meta:
         model = Recipe
-        fields = ("id", "name", "total_time", "author")
+        fields = ("id", "name", "total_time", "author", "steps")
+
+    def get_steps(self):
+        return []
+
 
 
 class RecipeListSerializer(serializers.ModelSerializer):
