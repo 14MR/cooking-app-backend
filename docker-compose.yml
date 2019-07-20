@@ -90,11 +90,27 @@ services:
     networks:
       - project
 
+  minio:
+    image: minio/minio
+    command: server /data
+    ports:
+      - 9000:9000
+    volumes:
+      - minio_data:/data
+      - minio_config:/root/.minio
+    environment:
+      MINIO_ACCESS_KEY: minio_cooking
+      MINIO_SECRET_KEY: minio_cooking
+    networks:
+      - project
+
 
 volumes:
   db:
   redis_data:
   rabbitmq_data:
+  minio_data:
+  minio_config:
 
 networks:
   project:
