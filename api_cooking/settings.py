@@ -27,6 +27,8 @@ DEBUG = os.environ.get("DEBUG", False) == "True"
 
 ALLOWED_HOSTS = ["*"]
 
+APP_URL = os.environ.get("APP_URL", 'http://localhost')
+
 # Application definition
 
 DJANGO_APPS = (

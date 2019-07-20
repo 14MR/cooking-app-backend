@@ -1,27 +1,31 @@
 from rest_framework import serializers
 
+from api_cooking import settings
 from recipes.models import Recipe, RecipeStep, RecipeImageBlock, RecipeTextBlock, RecipeTimerBlock
 from drf_yasg.utils import swagger_serializer_method
 
 
 class RecipeImageBlockSerializer(serializers.ModelSerializer):
-    image_url = serializers.ImageField(source='image')
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = RecipeImageBlock
-        fields = ("id", "type", "image_url")
+        fields = ("type", "image_url")
+
+    def get_image_url(self, block):
+        return settings.APP_URL + block.image.url
 
 
 class RecipeTextBlockSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeTextBlock
-        fields = ("id", "type", "text")
+        fields = ( "type", "text")
 
 
 class RecipeTimerBlockSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeTimerBlock
-        fields = ("id", "type", "time")
+        fields = ("type", "time")
 
 
 serializers_map = {
@@ -36,7 +40,7 @@ class RecipeStepSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeStep
-        fields = ("id", "blocks", "name")
+        fields = ("blocks", "name", "time")
 
     @swagger_serializer_method(serializer_or_field=RecipeTimerBlockSerializer)
     def get_blocks(self, obj):
